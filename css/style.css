@@ -1,0 +1,780 @@
+/* =============================================
+   🎨 森梅園・農園 商品コンシェルジュ
+   CSS Variables & Base Styles
+============================================= */
+
+:root {
+  --color-bg: #FBF8F3;
+  --color-bg-warm: #F5EDE0;
+  --color-accent: #C4463A;
+  --color-accent-light: #E8857C;
+  --color-green: #5B8C5A;
+  --color-green-light: #E8F0E3;
+  --color-text: #3D2B1F;
+  --color-text-light: #7A6B5D;
+  --color-gold: #B8860B;
+  --color-white: #FFFFFF;
+  --font-mincho: 'Zen Old Mincho', serif;
+  --font-maru: 'Zen Maru Gothic', sans-serif;
+  --anim-reveal-duration: 0.7s;
+  --anim-reveal-delay-step: 0.12s;
+  --float-distance: -8px;
+}
+
+html { scroll-behavior: smooth; }
+
+/* スキップリンク（キーボードナビ用） */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: var(--color-green);
+  color: var(--color-white);
+  padding: 0.6rem 1.2rem;
+  z-index: 9999;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-maru);
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  /* ベースフォントサイズ — 40代以上の閲覧者向けに大きめ設定 */
+  font-size: 19px;
+  line-height: 2.0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a { color: inherit; }
+
+/* キーボードフォーカススタイル */
+:focus-visible {
+  outline: 2px solid var(--color-green);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.chat-choice-btn:focus-visible {
+  outline: 2px solid var(--color-green);
+  outline-offset: 2px;
+  background: var(--color-green-light);
+}
+.chat-fab:focus-visible,
+.chat-close:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 3px;
+}
+.sns-link:focus-visible {
+  outline: 2px solid var(--color-green);
+  outline-offset: 3px;
+}
+.cta-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* =============================================
+   🎬 アニメーション
+============================================= */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(var(--float-distance)); }
+}
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.03); }
+}
+@keyframes bubbleIn {
+  from { opacity: 0; transform: scale(0.8) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes typing {
+  0%, 80% { opacity: 0.3; }
+  40% { opacity: 1; }
+}
+@keyframes bounce-gentle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.js-reveal { opacity: 0; }
+.js-reveal.is-visible { animation: fadeInUp var(--anim-reveal-duration) ease forwards; }
+.delay-1 { animation-delay: calc(var(--anim-reveal-delay-step) * 1); }
+.delay-2 { animation-delay: calc(var(--anim-reveal-delay-step) * 2); }
+.delay-3 { animation-delay: calc(var(--anim-reveal-delay-step) * 3); }
+.delay-4 { animation-delay: calc(var(--anim-reveal-delay-step) * 4); }
+.anim-float { animation: float 4s ease-in-out infinite; }
+.anim-pulse { animation: pulse-soft 3s ease-in-out infinite; }
+
+/* アクセシビリティ: モーション軽減設定 */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .js-reveal { opacity: 1; }
+  .chat-panel { transition: none; }
+}
+
+
+/* =============================================
+   📐 ヒーロー
+============================================= */
+.hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: linear-gradient(180deg, var(--color-bg-warm) 0%, var(--color-bg) 100%);
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(196,70,58,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(91,140,90,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.4rem;
+  background: var(--color-white);
+  border: 1px solid rgba(196,70,58,0.2);
+  border-radius: 100px;
+  font-size: 0.95rem;
+  color: var(--color-accent);
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+
+.hero-greeting {
+  font-family: var(--font-mincho);
+  font-size: 1.35rem;
+  color: var(--color-text-light);
+  line-height: 2.1;
+  margin-bottom: 1.5rem;
+}
+
+.hero-product-name {
+  font-family: var(--font-mincho);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+.hero-product-name .accent { color: var(--color-accent); }
+
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+  margin-bottom: 2rem;
+}
+
+/* 商品画像 */
+.product-image-hero {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 2rem;
+  box-shadow: 0 20px 60px rgba(196,70,58,0.15);
+  background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+}
+.product-image-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 1.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  color: var(--color-text-light);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  animation: float 2s ease-in-out infinite;
+}
+
+
+/* =============================================
+   📐 セクション共通
+============================================= */
+.section {
+  padding: 3.5rem 1.5rem;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-green);
+  margin-bottom: 0.8rem;
+}
+.section-label .icon {
+  width: 18px; height: 18px;
+  color: var(--color-green);
+}
+
+.section-title {
+  font-family: var(--font-mincho);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+}
+
+.section-body {
+  font-size: 1.1rem;
+  line-height: 2.2;
+  color: var(--color-text-light);
+}
+
+
+/* =============================================
+   📐 語りかけカード
+============================================= */
+.talk-card {
+  background: var(--color-white);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  position: relative;
+}
+.talk-card::before {
+  content: '';
+  position: absolute; top: 0; left: 1.5rem; right: 1.5rem;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-gold));
+  border-radius: 0 0 4px 4px;
+}
+
+.talk-avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-green-light);
+  margin-bottom: 1rem;
+  border: 2px solid var(--color-white);
+  box-shadow: 0 2px 8px rgba(91,140,90,0.2);
+}
+.talk-avatar img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+.talk-text {
+  font-size: 1.1rem;
+  line-height: 2.2;
+}
+
+.talk-name {
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+  margin-top: 1rem;
+}
+
+
+/* =============================================
+   📐 こだわりグリッド
+============================================= */
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.feature-item {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  transition: transform 0.3s ease;
+}
+.feature-item:hover { transform: translateY(-2px); }
+
+.feature-icon {
+  width: 40px; height: 40px;
+  margin: 0 auto 0.6rem;
+  color: var(--color-green);
+}
+
+.feature-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.feature-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  margin-top: 0.4rem;
+  line-height: 1.7;
+}
+
+
+/* =============================================
+   📐 商品スペックカード
+============================================= */
+.spec-card {
+  background: var(--color-white);
+  border-radius: 20px;
+  padding: 0.5rem 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+.spec-row {
+  display: flex;
+  padding: 0.9rem 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  gap: 1rem;
+  align-items: baseline;
+}
+.spec-row:last-child { border-bottom: none; }
+.spec-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-green);
+  min-width: 5em;
+  flex-shrink: 0;
+}
+.spec-value {
+  font-size: 1.05rem;
+  color: var(--color-text);
+  line-height: 1.8;
+}
+
+
+/* =============================================
+   📐 商品ラインナップ
+============================================= */
+.lineup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.lineup-item {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  transition: transform 0.3s ease;
+}
+.lineup-item:hover { transform: translateY(-2px); }
+.lineup-icon {
+  width: 32px; height: 32px;
+  margin: 0 auto 0.5rem;
+  color: var(--color-accent);
+}
+.lineup-name {
+  font-family: var(--font-mincho);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.lineup-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  line-height: 1.7;
+}
+.lineup-cta {
+  display: block;
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-decoration: none;
+  padding: 1rem;
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+.lineup-cta:hover {
+  background: rgba(196,70,58,0.06);
+}
+
+
+/* =============================================
+   📐 レシピカード
+============================================= */
+.recipe-card {
+  background: var(--color-white);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  transition: transform 0.3s ease;
+}
+.recipe-card:hover { transform: translateY(-3px); }
+
+.recipe-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-bg-warm) 0%, #EDE4D6 100%);
+}
+.recipe-image img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+.recipe-body { padding: 1.3rem 1.3rem 1.6rem; }
+
+.recipe-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  background: rgba(196,70,58,0.08);
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  margin-bottom: 0.6rem;
+}
+.recipe-tag .icon {
+  width: 14px; height: 14px;
+}
+
+.recipe-name {
+  font-family: var(--font-mincho);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.recipe-desc {
+  font-size: 1.05rem;
+  color: var(--color-text-light);
+  line-height: 2.0;
+}
+
+
+/* =============================================
+   📐 農園セクション
+============================================= */
+.farm-section {
+  background: var(--color-green-light);
+  padding: 3.5rem 1.5rem;
+}
+.farm-inner { max-width: 520px; margin: 0 auto; }
+
+.farm-photo {
+  width: 100%; height: 220px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #A8C5A0 0%, #7BAF73 100%);
+  margin-bottom: 1.5rem;
+}
+.farm-photo img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+.award-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-white);
+  padding: 0.8rem 1.4rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  margin-top: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.award-badge .icon {
+  width: 20px; height: 20px;
+  color: var(--color-gold);
+}
+
+
+/* =============================================
+   📐 CTA
+============================================= */
+.cta-section {
+  text-align: center;
+  padding: 3rem 1.5rem 2rem;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-family: var(--font-maru);
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 1.3rem 3rem;
+  border-radius: 100px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(196,70,58,0.25);
+  transition: all 0.3s ease;
+}
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(196,70,58,0.35);
+}
+.cta-button .icon {
+  width: 20px; height: 20px;
+}
+
+.cta-sub {
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+  margin-top: 1rem;
+}
+
+.sns-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.sns-link {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--color-white);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-decoration: none;
+  transition: transform 0.3s ease;
+  color: var(--color-text);
+}
+.sns-link:hover { transform: translateY(-2px); }
+.sns-link .icon { width: 22px; height: 22px; }
+
+
+/* =============================================
+   📐 フッター
+============================================= */
+.footer {
+  text-align: center;
+  padding: 2rem 1.5rem 6rem;
+  background: var(--color-bg-warm);
+}
+.footer-logo {
+  font-family: var(--font-mincho);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.footer-address {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  line-height: 2.0;
+}
+.footer-powered {
+  font-size: 0.7rem;
+  color: rgba(122,107,93,0.5);
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  text-decoration: none;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  border: 1px solid rgba(0,0,0,0.08);
+  transition: background 0.2s, color 0.2s;
+}
+.back-to-top:hover {
+  background: var(--color-white);
+  color: var(--color-text);
+}
+
+/* 装飾 */
+.divider {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.8rem; padding: 1rem 0;
+  color: var(--color-text-light); font-size: 0.8rem; opacity: 0.5;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; max-width: 60px; height: 1px; background: currentColor;
+}
+
+
+/* =============================================
+   💬 チャット風Q&A
+============================================= */
+.chat-fab {
+  position: fixed; bottom: 1.2rem; right: 1.2rem;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--color-green); color: white; border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(91,140,90,0.4);
+  z-index: 1000; transition: all 0.3s ease;
+  display: flex; align-items: center; justify-content: center;
+  animation: bounce-gentle 2s ease-in-out infinite;
+}
+.chat-fab .icon { width: 28px; height: 28px; color: white; }
+.chat-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(91,140,90,0.5); }
+.chat-fab.is-open { animation: none; background: var(--color-text-light); }
+
+.chat-fab-label {
+  position: fixed; bottom: 1.5rem; right: 5.5rem;
+  background: var(--color-white); color: var(--color-text);
+  font-size: 0.85rem; font-weight: 700;
+  padding: 0.5rem 1.2rem; border-radius: 100px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  z-index: 1000; white-space: nowrap; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.chat-fab-label.is-hidden { opacity: 0; }
+
+.chat-panel {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  max-height: 85vh; background: var(--color-bg);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.12);
+  z-index: 999; display: flex; flex-direction: column;
+  transform: translateY(100%); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.chat-panel.is-open { transform: translateY(0); opacity: 1; }
+
+.chat-header {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  flex-shrink: 0;
+}
+.chat-header-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-green-light);
+  flex-shrink: 0;
+}
+.chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.chat-header-info { flex: 1; }
+.chat-header-name { font-size: 0.95rem; font-weight: 700; }
+.chat-header-status {
+  font-size: 0.75rem; color: var(--color-green);
+  display: flex; align-items: center; gap: 0.3rem;
+}
+.chat-header-status::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-green);
+}
+
+.chat-close {
+  width: 36px; height: 36px; border-radius: 50%; border: none;
+  background: rgba(0,0,0,0.05); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.2s;
+  color: var(--color-text);
+}
+.chat-close .icon { width: 18px; height: 18px; }
+.chat-close:hover { background: rgba(0,0,0,0.1); }
+
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 1rem;
+  display: flex; flex-direction: column; gap: 0.8rem;
+  scroll-behavior: smooth;
+}
+
+.chat-bubble {
+  max-width: 85%; padding: 1.1rem 1.3rem; border-radius: 18px;
+  font-size: 1.05rem; line-height: 2.0;
+  animation: bubbleIn 0.35s ease forwards;
+}
+.chat-bubble.from-mori {
+  align-self: flex-start; background: var(--color-white);
+  color: var(--color-text); border-bottom-left-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.chat-bubble.from-user {
+  align-self: flex-end; background: var(--color-green);
+  color: white; border-bottom-right-radius: 4px;
+}
+
+.typing-indicator {
+  align-self: flex-start; display: flex; gap: 4px;
+  padding: 0.8rem 1.2rem; background: var(--color-white);
+  border-radius: 18px; border-bottom-left-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.typing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-text-light); }
+.typing-dot:nth-child(1) { animation: typing 1.2s ease-in-out infinite 0s; }
+.typing-dot:nth-child(2) { animation: typing 1.2s ease-in-out infinite 0.2s; }
+.typing-dot:nth-child(3) { animation: typing 1.2s ease-in-out infinite 0.4s; }
+
+.chat-choices {
+  align-self: flex-end; display: flex; flex-direction: column;
+  gap: 0.5rem; width: 100%; max-width: 320px;
+  animation: bubbleIn 0.35s ease forwards;
+}
+.chat-choice-btn {
+  background: var(--color-white);
+  border: 1.5px solid var(--color-green);
+  border-radius: 100px;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--font-maru);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-green);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: flex; align-items: center; gap: 0.5rem;
+  text-decoration: none;
+}
+.chat-choice-btn:hover {
+  background: var(--color-green); color: white;
+  transform: translateX(-4px);
+}
+.chat-choice-btn:active { transform: scale(0.97); }
+.chat-choice-btn .choice-icon { width: 20px; height: 20px; flex-shrink: 0; }
