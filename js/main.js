@@ -180,37 +180,74 @@ function handleChoice(id) {
 
 function addFollowUpChoices(answeredId) {
   const remaining = qaData.initial.choices.filter(c => c.id !== answeredId);
-  const allChoices = [
-    ...remaining,
+  // 最初に表示する質問は3件まで
+  const visibleQuestions = remaining.slice(0, 3);
+  const hiddenQuestions = remaining.slice(3);
+  const contactChoices = [
     { id: "_tel",     icon: "phone", label: "電話して直接きく" },
     { id: "_contact", icon: "mail",  label: "お問い合わせフォーム" }
   ];
 
   const container = document.createElement('div');
   container.className = 'chat-choices';
-  allChoices.forEach(c => {
+
+  // 表示する質問ボタン
+  visibleQuestions.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'chat-choice-btn';
+    btn.innerHTML = getIcon(c.icon, 'choice-icon') + ' ' + c.label;
+    btn.addEventListener('click', () => handleChoice(c.id));
+    container.appendChild(btn);
+  });
+
+  // 「他の質問を見る」ボタン（非表示の質問がある場合）
+  if (hiddenQuestions.length > 0) {
+    const moreBtn = document.createElement('button');
+    moreBtn.className = 'chat-choice-btn';
+    moreBtn.style.borderStyle = 'dashed';
+    moreBtn.innerHTML = '他の質問を見る（' + hiddenQuestions.length + '件）';
+    moreBtn.addEventListener('click', () => {
+      // 「他の質問を見る」ボタンを消して残りを表示
+      moreBtn.remove();
+      hiddenQuestions.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'chat-choice-btn';
+        btn.innerHTML = getIcon(c.icon, 'choice-icon') + ' ' + c.label;
+        btn.addEventListener('click', () => handleChoice(c.id));
+        // 連絡先ボタンの前に挿入
+        const contactBtns = container.querySelectorAll('[data-contact]');
+        if (contactBtns.length > 0) {
+          container.insertBefore(btn, contactBtns[0]);
+        } else {
+          container.appendChild(btn);
+        }
+      });
+      scrollToBottom();
+    });
+    container.appendChild(moreBtn);
+  }
+
+  // 連絡先ボタン
+  contactChoices.forEach(c => {
     if (c.id === '_tel') {
       const link = document.createElement('a');
       link.href = 'tel:0973522873';
       link.className = 'chat-choice-btn';
+      link.setAttribute('data-contact', 'true');
       link.innerHTML = getIcon(c.icon, 'choice-icon') + ' ' + c.label;
       container.appendChild(link);
-    } else if (c.id === '_contact') {
+    } else {
       const link = document.createElement('a');
       link.href = 'https://moribaien-nouen.net/contact/';
       link.target = '_blank';
       link.rel = 'noopener';
       link.className = 'chat-choice-btn';
+      link.setAttribute('data-contact', 'true');
       link.innerHTML = getIcon(c.icon, 'choice-icon') + ' ' + c.label;
       container.appendChild(link);
-    } else {
-      const btn = document.createElement('button');
-      btn.className = 'chat-choice-btn';
-      btn.innerHTML = getIcon(c.icon, 'choice-icon') + ' ' + c.label;
-      btn.addEventListener('click', () => handleChoice(c.id));
-      container.appendChild(btn);
     }
   });
+
   chatMessages.appendChild(container);
   scrollToBottom();
 }
